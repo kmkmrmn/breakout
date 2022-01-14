@@ -1,0 +1,120 @@
+body {
+    background: #fff;
+  -webkit-text-size-adjust: 100%;
+}
+
+.header {
+  position: relative;
+  height: 50vh;
+  background: linear-gradient(to left, rgba(255, 255, 255,1), rgba(255, 255, 255, 0.5)), url(images/top_image.jpg);
+  background-size: cover;
+  box-shadow: 0 1px 3px #918662;
+}
+
+.header_bottom {
+  background-color: #fff;
+  height: 5vh;
+  width: 100%;
+  margin: 0px;
+}
+.cover::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0,.3) radial-gradient(rgba(0,0,0,.3) 25%, transparent 0) center / 5px 5px;
+}
+
+.header h1 {
+	position: absolute;
+	z-index: 1;
+	top: 50%;
+	width: 100%;
+	margin: 0;
+	padding: 0 .5em;
+	color: #000;
+	font-size: 5rem;
+	line-height: 1.4;
+	font-family: "Dosis", sans-serif;
+	letter-spacing: .1em;
+	transform: translateY(-50%);
+}
+@media all and (max-width: 480px) {
+	header h1 {
+		font-size: 4rem;
+	}
+}
+
+
+.container {
+  display: flex;
+  margin: 30px;
+  max-width: 100%;
+  background: #fff;
+  padding: 10px;
+}
+.card {
+  margin: 25px;
+  width: 350px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px #ccc;
+}
+.card-img {
+  border-radius: 5px 5px 0 0;
+  max-width: 100%;
+  height: auto;
+}
+.card-content {
+  padding: 20px;
+}
+.card-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+.card-text {
+  color: #777;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.fadeUp{
+  animation-name:fadeUpAnime;
+  animation-duration:0.5s;
+  animation-fill-mode:forwards;
+  opacity:0;
+  }
+  
+  @keyframes fadeUpAnime{
+    from {
+      opacity: 0;
+    transform: translateY(100px);
+    }
+  
+    to {
+      opacity: 1;
+    transform: translateY(0);
+    }
+  }
+
+  .img_wrap{
+    border: 1px solid #ddd;
+    width: 300px;
+    height: auto;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .img_wrap img{
+    width: 100%;
+    cursor: pointer;
+    transition-duration: 0.3s;
+  }
+  .img_wrap:hover img{
+    opacity: 0.6;
+    transition-duration: 0.3s;
+  }
+ 
