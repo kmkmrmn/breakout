@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css">
+    <title>今回使用したソースコード</title>
+    <style>
+    </style>
+    
+</head>
+<body>
+
+    <p>今回使用したソースコード</p>
+    
+    <pre><code>
+        
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+        &lt;meta charset="utf-8" /&gt;
+        &lt;title&gt;Gamedev Canvas Workshop&lt;/title&gt;
+        &lt;style&gt;
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+      .buttons {
+        text-align: center;
+      }
+      .buttons button{
+        margin: 20px;
+      }
+      &lt;/style&gt;
+      &lt;/head&gt;
+      &lt;body&gt;
+      &lt;div class= "buttons"&gt;
+      &lt;h1&gt;ブロック崩しゲーム&lt;/h1&gt;
+      &lt;input type="button" value="start" onclick="draw()"&gt;
+      &lt;/div&gt;
+
+      &lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;
+
+      &lt;script&gt;
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var ballRadius = 10;
+var x = canvas.width/2;
+var y = canvas.height-30;
+var dx = 2;
+var dy = -2;
+var paddleHeight = 10;
+var paddleWidth = 75;
+var paddleX = (canvas.width-paddleWidth)/2;
+var rightPressed = false;
+var leftPressed = false;
+var brickRowCount = 3;
+var brickColumnCount = 5;
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
+var score = 0;
+var lives = 3;
+var ballColor = "#0095DD";
+var bricksColor = "#0095DD";
+
+var bricks = [];
+for(var c=0; c&lt;brickColumnCount; c++) {
+  bricks[c] = [];
+  for(var r=0; r&lt;brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
+  }
+}
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
+function keyDownHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = true;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = true;
+    }
+}
+
+function keyUpHandler(e) {
+    if(e.key == "Right" || e.key == "ArrowRight") {
+        rightPressed = false;
+    }
+    else if(e.key == "Left" || e.key == "ArrowLeft") {
+        leftPressed = false;
+    }
+}
+
+function mouseMoveHandler(e) {
+  var relativeX = e.clientX - canvas.offsetLeft;
+  if(relativeX &gt; 0 && relativeX &lt; canvas.width) {
+    paddleX = relativeX - paddleWidth/2;
+  }
+}
+
+function totallScore() {
+  var z = 2 **score;
+  if(score == 0){
+    z = 0;
+  }
+  return `${z}`;
+}
+
+function collisionDetection() {
+  for(var c=0; c&lt;brickColumnCount; c++) {
+    for(var r=0; r&lt;brickRowCount; r++) {
+      var b = bricks[c][r];
+      if(b.status == 1) {
+        if(x &gt; b.x && x &lt; b.x+brickWidth && y &gt; b.y && y &lt; b.y+brickHeight) {
+          dy = -dy;
+          ballColor = colorChange();
+          b.status = 0;
+          score++;
+          if(score == brickRowCount*brickColumnCount) {
+            alert("YOU WIN, CONGRATS! YOUR SCORE IS " + totallScore());
+            document.location.reload();
+            clearInterval(interval); // Needed for Chrome to end game
+          }
+        }
+      }
+    }
+  }
+}
+
+function drawBall() {
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+  ctx.fillStyle = ballColor;
+  ctx.fill();
+  ctx.closePath();
+}
+function drawPaddle() {
+  ctx.beginPath();
+  ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+}
+function drawBricks() {
+  for(var c=0; c&lt;brickColumnCount; c++) {
+    for(var r=0; r&lt;brickRowCount; r++) {
+        if(r == 0) {
+        bricksColor = "red";
+      }
+      else if(r == 1) {
+        bricksColor = "green";
+      }
+      else if(r == 2) {
+        bricksColor = "blue";
+      }
+      if(bricks[c][r].status == 1) {
+        var brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+        var brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = bricksColor;
+        ctx.fill();
+        ctx.closePath();
+        }
+     }
+  }
+}
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: "+ totallScore(), 8, 20);
+}
+function drawLives() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+}
+
+function colorChange() {
+  var r = Math.floor(Math.random() * 256);
+  var g = Math.floor(Math.random() * 256);
+  var b = Math.floor(Math.random() * 256);
+  return `rgba(${r},${g},${b},1)`;
+}
+
+function draw () {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBricks();
+  drawBall();
+  drawPaddle();
+  drawScore();
+  drawLives();
+  collisionDetection();
+
+  if(x + dx &gt; canvas.width-ballRadius || x + dx &lt; ballRadius) {
+    dx = -dx;
+    ballColor = colorChange();
+  }
+  if(y + dy &lt; ballRadius) {
+    dy = -dy;
+    ballColor = colorChange();
+  }
+  else if(y + dy &gt; canvas.height-ballRadius) {
+    if(x > paddleX && x &lt; paddleX + paddleWidth) {
+      dy = -dy - 2;
+    }
+    else {
+      lives--;
+      if(!lives) {
+          alert("GAME OVER. YOUR SCORE IS " + totallScore());
+          document.location.reload();
+      }
+      else {
+          x = canvas.width/2;
+          y = canvas.height-30;
+          dx =  -10 + Math.floor( Math.random() * 20);
+          dy =  -10 + Math.floor( Math.random() * 10);
+          paddleX = (canvas.width-paddleWidth)/2;
+            
+      }
+    }
+  }
+
+  if(rightPressed && paddleX &lt; canvas.width-paddleWidth) {
+    paddleX += 7;
+  }
+  else if(leftPressed && paddleX &gt; 0) {
+    paddleX -= 7;
+  }
+
+  x += dx;
+  y += dy;
+  requestAnimationFrame(draw);
+}
+&lt;/script&gt;
+
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+
+
+<!-- JSファイルの読み込み -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+<script>
+  // ハイライトを実行
+  hljs.initHighlightingOnLoad();
+
+</script>
+
+</body>
+
+</html>
