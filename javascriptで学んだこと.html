@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css">
+    <title>ブロック崩しゲームで学んだJavaScriptについて</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", "Meiryo", "ＭＳＰゴシック", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #e6e6e6;
+        }
+
+        header {
+            width: 100%;
+            padding: 30px 4% 10px;
+            background-color: rgb(217, 236, 212);
+            position: fixed;
+            top: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4b4b4b;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            display: flex;
+        }
+
+        li {
+            margin: 0 0 0 15px;
+            font-size: 14px;
+        }
+
+        nav {
+            margin: 0 0 0 auto;
+        }
+
+        .head-border {
+            display: flex;
+            align-items: center;
+        }
+
+        .head-border::before,
+        .head-border::after {
+            content: "";
+            height: 1px;
+            flex-grow: 1;
+            background-color: #498ee0;
+        }
+
+        .head-border::before {
+            margin-right: 1rem;
+        }
+
+        .head-border::after {
+            margin-left: 1rem;
+        }
+
+        main {
+            width: 100%;
+            padding: 60px 4% 10px;
+            background-color: #fff;
+            display: block;
+        }
+
+        .heading09 {
+            font-size: 16px;
+            color: #4b4b4b;
+        }
+
+        .heading09::before {
+	        content: attr(data-en);
+	        display: block;
+	        color: #498ee0;
+	        font-size: 18px;
+        }
+
+        .heading09::after {
+	        content: '';
+	        display: block;
+	        width: 40px;
+	        height: 1px;
+	        background-color: #498ee0;
+        }
+
+        h4 {
+            position: relative;
+            padding-left: 30px;
+            font-size:20px;
+            color: #000;
+        }
+
+        h4::before,
+        h4::after{
+            content: "□";
+            position: absolute;
+        }
+
+        h4::before{
+            left:0;
+            top:-3px;
+        }
+
+        h4::after{
+            left: 5px;
+            top: 3px;
+            color: #A1B8D1;
+        }
+
+        .box3 {
+            padding: 0.2em 0.5em;
+            margin: 2em 0;
+            background: #e8f4ff;
+            box-shadow: 0px 0px 0px 10px #e8f4ff;
+            border: dashed 2px white;
+        }
+        .box3 p {
+            margin: 0; 
+            padding: 0;
+        }
+    </style>
+    
+</head>
+<body>
+
+<script>
+
+</script>
+
+<header>
+    <h1>
+        <a href="/">MDN JavaScriptでブロック崩しゲームを作る</a>
+    </h1>
+    <nav class="pc-nav">
+        <ul>
+            <li><a href="index.html">index</a></li>
+            <li><a href="ブロック崩しゲーム.html">game</a></li>
+            <li><a href="ソースコード.html">code</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <article>
+        <h2 class="head-border">JavaScriptとは？</h2>
+        <p>ブラウザー向けスクリプト言語のこと。当時注目を集めていたJavaにあやかって名づけられたものであり、そのため誤解を招きやすい。なお、JavaとJavaScriptはまったくの別言語であり、互換性もない。
+            現在はGoogle Chrome, Firefox, Safari, Microsoft Edgeなど、主要なブラウザのほとんどで実装されている。JavaScriptの言語としての特徴は大きく4つ。</p>
+           <p> (1)	スクリプト言語である
+            <br>要は簡易であることを目的として作られたプログラミング言語のこと。その一方でオブジェクト指向的な構造も持ち合わせており、再利用性・保守性に富んだコードも記述しやすい。</p>
+            <p>(2)	インタプリター型の言語である
+            <br>インタプリター言語とは、プログラムを先頭から逐一解析し、コンピューターに理解できる形式に翻訳しながら実行していく言語のこと。コンパイル（一括翻訳）言語にくらべると動作が遅い問題があるが、プログラムを実行する際コンパイルよりも特別な手続きは必要ないというメリットがある。</p>
+            <p>(3)	さまざまな環境で利用できる
+            <br>JavaScriptはブラウザー上での用途に限らず、様々な環境で動作が可能である。</p>
+            <p>(4)	いくつかの機能から構成される
+            <br>JavaScriptはブラウザー以外の環境でも利用できるが、Webページを加工・編集するために使用したり、ブラウザー上での制御をJavaScriptから制御させることも可能。</p>
+            <br>
+            <h3 class="heading09" data-en="Point">スクリプトをデバッグする</h3>
+            <div class="box3">
+            <p>開発上で大事になってくるのが[Sources]タブ。[Sources]タブでは、コード左の桁番号をクリックすることでブレイクポイントを設置できる。ブレイクポイントとは、実行中にスクリプトを一時停止させるための機能のこと。デバッグでは、ブレイクポイントでスクリプトを中断し、その時点でスクリプトの状態を確認していくことが重要。</p>
+            <p>・ステップイン
+            <br>→1行単位に実行</p>
+            <p>・ステップオーバー
+            <br>→１行単位に実行。ただし関数があった場合もこれを実行して次の行へ</p>
+            <p>・ステップアウト
+            <br>→現在の関数が呼び出し元に戻るまで実行</p>
+            <p>[Sources]タブでは、圧縮されたコードを整形することも可能。</p>
+            <p>※他にも、ストレージ/クッキーの内容を確認する[Application]タブや、ログ確認/オブジェクト操作などの万能ツール[Console]タブなどがある。</p>
+            </div>
+            <br>
+            <pre><code>
+                &lt;!DOCTYPE html&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                &lt;meta charset="utf-8" /&gt;
+                &lt;title&gt;Gamedev Canvas Workshop&lt;/title&gt;
+                &lt;style&gt;
+                * { padding: 0; margin: 0; }
+                canvas { background: #eee; display: block; margin: 0 auto; }
+              .buttons {
+                text-align: center;
+              }
+              .buttons button{
+                margin: 20px;
+              }
+              &lt;/style&gt;
+              &lt;/head&gt;
+            </code></pre>
+            <br>
+            <p><code> &lt;!DOCTYPE html&gt;</code>は文書がhtmlで記述されたものだと宣言するためのDOCTYPE宣言（Document Type Definition,文書型宣言）である。Headタグよりも先に宣言すること。</p>
+            <p><code> &lt;meta charset="utf-8" /&gt;</code>はHTMLの文書コードの統一を行っている。UTF-8とは世界的に用いられる文字コードでUnicode用の符号化方式のひとつ。</p>
+            <p>titleタグはサイトやページにタイトルをつけるためのタグ。検索結果に表示されるだけでなく、ブックマークやSNSでの共有を行う際にもデフォルトの名前として扱われる。</p>
+            <p>StyleタグではCSSの記述が行われている。</p>
+            <br><br>
+
+            <h2 class="head-border">CSSとは？</h2>
+        <p>Cascading Style Sheetsのこと。Webページのスタイルを指定するための言語。文書のスタイルを指定する技術全般をスタイルシートといい、HTMLやXHTMLでのスタイルを指定するためにはCSSが一般的に用いられる。HTMLがWebページ内の各要素の意味や情報構造を定義するのに対して、CSSではそれらをどのように装飾するのか指定する。</p>
+        <p>ちなみに、上記のコードで*{ padding~ となっているのは、全ての要素に対する指定となっている。Canvas要素ではブロック崩しゲームのゲーム背景をスタイルとして指定しており、#eeeはカラーコード、displayはプロパティの値をblockとして指定している。Displayプロパティがblockとして設定されれば、幅や高さなどの値を指定することが可能になる。Inlineとして設定された場合には、幅や高さは文字の大きさやフォントのよって自動的に決定されることとなる。marginはボックス外側の余白のこと。ここでは0に指定されている。/p>
+        <br>
+        <pre><code>
+            &lt;body&gt;
+            &lt;div class= "buttons"&gt;
+            &lt;h1&gt;ブロック崩しゲーム&lt;/h1&gt;
+            &lt;input type="button" value="start" onclick="draw()"&gt;
+            &lt;/div&gt;
+            &lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;
+        </code></pre>
+        <br>
+        <p>body要素は実際にブラウザー上に表示される文書を記述するタグである。ちなみにJavaScriptを記述する際のscriptタグはbodyタグ内の一番最後に記述することが高速化のポイントとなっている。</p>
+        <p><code>&lt;canvas id= </code>ではcanvasの要素名と幅・高さを指定している。</p>
+        <br><br>
+
+        <h2 class="head-border">変数とは？</h2>
+        <p>JavaScriptで使われる変数について変数とは「データの入れ物」のこと。スクリプトが、最終的な解答を導くための一連の「データのやりとり」を表すものであるとするならば、「やりとりされる途中経過のデータを一時的に保存する」のが、変数の役割となる。</p>
+        <br>
+        <pre><code>
+            &lt;script&gt;
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            var ballRadius = 10;
+            var x = canvas.width/2;
+            var y = canvas.height-30;
+            var dx = 2;
+            var dy = -2;
+            var paddleHeight = 10;
+            var paddleWidth = 75;
+            var paddleX = (canvas.width-paddleWidth)/2;
+            var rightPressed = false;
+            var leftPressed = false;
+            var brickRowCount = 3;
+            var brickColumnCount = 5;
+            var brickWidth = 75;
+            var brickHeight = 20;
+            var brickPadding = 10;
+            var brickOffsetTop = 30;
+            var brickOffsetLeft = 30;
+            var score = 0;
+            var lives = 3;
+            var ballColor = "#0095DD";
+            var bricksColor = "#0095DD";
+        </code></pre>
+        <br>
+        <h4>変数を宣言する</h4>
+        <p>変数を利用するにあたり、あらかじめ変数を宣言しておく必要がある。変数を宣言するためには、var命令を使用する。一方で、変数を宣言する際には、let命令というものもある。一見使い方はvarと変わらないが、let命令では同名の変数を許可しない仕様になっている。</p>
+        <br>
+        <p>※コードの記法</p>
+        <p>・camelCase記法
+        <br>先頭単語は小文字、それ以外の単語の頭文字は大文字</p>
+        <p>・Pascal記法
+        <br>すべての単語の頭文字は大文字</p>
+        <p>・アンダースコア記法
+        <br>単語同士を「 _ 」で連結</p>
+        <p>※一般的には以下のような使い分け</p>
+        <p>・変数/関数名→camelCase記法
+        <br>・定数名→アンダースコア記法
+        <br>・クラス（コンストラクター）名→Pascal記法</p>
+        <br>
+        <h2 class="heading09" data-en="Point">定数はどんなときに使うか？</h2>
+        <div class="box3">
+        <p>コードを記述する際、他人が自分のコードを見たとき、自分は数値だけ見てその数値が「何を意味しているか」は分かるかもしれないが、他人にはわからないマジックナンバーである。また、他人がいずれ自分のコードを書き換える際、そのようなマジックナンバーが散在していては、修正に手間がかかってしまう。そのため、定数として定義・リスト化しておくことで修正漏れなどのバグの原因も減少させることができる。</p>
+        </div>
+        <br>
+        <h4>for命令</h4>
+        <p>指定された回数だけ繰り返し処理を行うのがfor命令。条件式の真偽に応じてループを制御するwhile / do while命令もある。</p>
+        <br>
+        <pre><code>
+            var bricks = [];
+            for(var c=0; c&lt;brickColumnCount; c++) {
+                bricks[c] = [];
+            for(var r=0; r&lt;brickRowCount; r++) {
+                bricks[c][r] = { x: 0, y: 0, status: 1 };
+                }
+            }
+        </code></pre>
+        <br>
+        <p>上記のコードでは、それぞれ横5列・縦3行のブロックを生成するまで繰り返している。また、描画はx座標y座標共に0の座標から描画される。</p>
+        <br>
+        <h4>イベントをトリガーにして処理を実行する-イベントドリブンモデル</h4>
+        <br>
+        <pre><code>
+            document.addEventListener("keydown", keyDownHandler, false);
+            document.addEventListener("keyup", keyUpHandler, false);
+            document.addEventListener("mousemove", mouseMoveHandler, false);
+        </code></pre>
+        <br>
+        <p>ブラウザーで表示されたページ上では、</p>
+        <p>・ボタンがクリックされた</p>
+        <p>・マウスポインターが文字列の上に乗った（外れた）</p>
+        <p>・テキストボックスの内容が変更された</p>
+        <p>など、様々なイベントが発生する。クライアントサイドであるJavaScriptでは、それらのイベントに応じて実行するコードを記述するのが特徴。このプログラミングモデルのことをイベントドリブンモデル（イベント駆動型モデル）という。このとき、イベントに対応してその処理内容を定義するコードのかたまり（関数）のことをイベントハンドラーまたはイベントリスナーという。</p>
+        <p>以下は、JavaScriptで利用できる主なイベント。</p>
+        <table border="1">
+            <tr>
+                <td>分類</td>
+                <td>イベント名</td>
+                <td>発生タイミング</td>
+            </tr>
+            <tr>
+                <td rowspan="3">読み込み</td>
+                <td>abort</td>
+                <td>画像の読み込みを中断した時</td>
+            </tr>
+            <tr>
+                <td>load</td>
+                <td>ページ/画像の読み込みが完了した時</td>
+            </tr>
+            <tr>
+                <td>unload</td>
+                <td>ほかのページに移動する時</td>
+            </tr>
+            <tr>
+                <td rowspan="10">マウス</td>
+                <td>click</td>
+                <td>クリック時</td>
+            </tr>
+            <tr>
+                <td>dblclick</td>
+                <td>ダブルクリック時</td>
+            </tr>
+            <tr>
+                <td>mousedown</td>
+                <td>マウスボタンを押した時</td>
+            </tr>
+            <tr>
+                <td>mouseup</td>
+                <td>マウスボタンを離した時</td>
+            </tr>
+            <tr>
+                <td>mousemove</td>
+                <td>マウスポインターが移動した時</td>
+            </tr>
+            <tr>
+                <td>mouseover</td>
+                <td>マウスポインターが要素に乗った時</td>
+            </tr>
+            <tr>
+                <td>mouseout</td>
+                <td>マウスポインターが要素から外れた時</td>
+            </tr>
+            <tr>
+                <td>mouseenter</td>
+                <td>マウスポインターが要素に乗った時</td>
+            </tr>
+            <tr>
+                <td>mouseleave</td>
+                <td>マウスポインターが要素から外れた時</td>
+            </tr>
+            <tr>
+                <td>contextmenu</td>
+                <td>コンテキストメニューが表示される前</td>
+            </tr>
+            <tr>
+                <td rowspan="3">キー</td>
+                <td>keydown</td>
+                <td>キーを押した時</td>
+            </tr>
+            <tr>
+                <td>keypress</td>
+                <td>キーを押している時</td>
+            </tr>
+            <tr>
+                <td>keyup</td>
+                <td>キーを離した時</td>
+            </tr>
+            <tr>
+                <td rowspan="3">フォーム</td>
+                <td>change</td>
+                <td>内容が変更された時</td>
+            </tr>
+            <tr>
+                <td>reset</td>
+                <td>リセットボタンを押した時</td>
+            </tr>
+            <tr>
+                <td>submit</td>
+                <td>サブミットボタンを押した時</td>
+            </tr>
+            <tr>
+                <td rowspan="4">その他</td>
+                <td>blur</td>
+                <td>要素からフォーカスが離れた時</td>
+            </tr>
+            <tr>
+                <td>focus</td>
+                <td>要素がフォーカスされた時</td>
+            </tr>
+            <tr>
+                <td>resize</td>
+                <td>要素のサイズを変更した時</td>
+            </tr>
+            <tr>
+                <td>scroll</td>
+                <td>スクロールした時</td>
+            </tr>
+        </table>
+        <p>※mouseover/mouseoutとmouseenter/mouseleaveの違いに注意。
+        <br>mouseover/mouseoutイベントは内側の要素に出入りした時にも発生する。</p>
+        <br>
+        <u>イベントハンドラーとイベントリスナーの違い</u>
+        <p>・イベントハンドラーは同一の要素/同一のイベントに対して、複数のイベントハンドラーをひもづけられない。</p>
+        <p>・イベントリスナーは同一要素の同一イベントに対して複数ひもづけ可能</p>
+        <p>Elem.addEventListener(type, listner, capture)
+            <br>elem：要素オブジェクト　　type：イベントの種類
+            <br>listener：イベントに応じて実行すべき処理　　capture：イベントの方向
+        </p>
+
+        <br><br>
+
+        <h2 class="head-border">関数(function)とは？</h2>
+        <p>関数とは、「なにかしらの入力値（引数）を与えられることによって、あらかじめ決められた処理を行い、その結果（戻り値）を返す仕組み」のことをいう。</p>
+        <br>
+        <pre><code>
+            function keyDownHandler(e) {
+                if(e.key == "Right" || e.key == "ArrowRight") {
+                    rightPressed = true;
+                }
+                else if(e.key == "Left" || e.key == "ArrowLeft") {
+                    leftPressed = true;
+                }
+            }
+            
+            function keyUpHandler(e) {
+                if(e.key == "Right" || e.key == "ArrowRight") {
+                    rightPressed = false;
+                }
+                else if(e.key == "Left" || e.key == "ArrowLeft") {
+                    leftPressed = false;
+                }
+            }
+            
+            function mouseMoveHandler(e) {
+              var relativeX = e.clientX - canvas.offsetLeft;
+              if(relativeX &gt; 0 && relativeX &lt; canvas.width) {
+                paddleX = relativeX - paddleWidth/2;
+              }
+            }
+            
+            function totallScore() {
+              var z = 2 **score;
+              if(score == 0){
+                z = 0;
+              }
+              return `${z}`;
+            }
+        </code></pre>
+        <p>※関数の名前は「動詞＋名詞」の形式で命名するのが一般的</p>
+        <p>ちなみに、function(e)の記述の「e」はイベントオブジェクトのこと。イベントハンドラーやイベントリスナーと紐づいている場合は、それらで設定されたコールバック関数の引数として自動的に渡される。</p>
+
+        <br>
+        <h4>条件によって処理を分岐するif命令</h4>
+        <p>If命令は「もし～だったら…、さもなくば…」という構造を表現するためのもの。与えられた条件式がtrue/falseであるかによって、対応する命令を実行する。また、if命令は2つから片方選択する命令だが、複数の選択から1つを選択するのはswitch命令となる。</p>
+        <pre><code>
+            If(条件式) {
+                条件式がtrueの場合に実行する命令
+                }　else {
+                条件式がfalseの場合に実行される命令
+                }
+                
+        </code></pre>
+        <u>・else ifによる多岐分岐</u>
+        <p>else ifブロックを利用することで、複数の分岐を表現することも可能。else ifブロックは、必要となる分岐の数だけ列記すること。</p>
+
+        <br><br>
+        <h4>色の指定について</h4>
+        <p>文字や図形など、色の指定を行うときはカラーコードまたはrgbaカラーモデルを使用する方法がある。Rgbaカラーモデルとは0~255の数値で指定されるr(red),g(green),b(blue)と0~1の数値で指定される透明度からなる。</p>
+        <br>
+        <h2 class="heading09" data-en="Point">決められた範囲から数値をランダムに抽出する</h2>
+        <div class="box3">
+        <p>Math.floor(Math.random() * 数値)により、0から任意の範囲の数値を取り出すことができる。これにより、0~255までの数値をランダムに抽出することで、rgbaカラーモデルを使い、色をランダムに変えることができる。
+        <br>※注意すべき点はMath.floor(Math.random() * 255)としてしまうと、0~254までの整数しか取り出されないこと。
+        </p>
+        </div>
+    
+    </article>
+</main>
+    <!-- JSファイルの読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>
+    // ハイライトを実行
+    hljs.initHighlightingOnLoad();
+    </script>
+</body>
+
+</html>
