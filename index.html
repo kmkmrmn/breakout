@@ -9,51 +9,6 @@
   -webkit-text-size-adjust: 100%;
 }
 
-.header {
-  position: relative;
-  height: 50vh;
-  background: linear-gradient(to left, rgba(255, 255, 255,1), rgba(255, 255, 255, 0.5)), url(images/top_image.jpg);
-  background-size: cover;
-  box-shadow: 0 1px 3px #918662;
-}
-
-.header_bottom {
-  background-color: #fff;
-  height: 5vh;
-  width: 100%;
-  margin: 0px;
-}
-.cover::after {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background: rgba(0,0,0,.3) radial-gradient(rgba(0,0,0,.3) 25%, transparent 0) center / 5px 5px;
-}
-
-.header h1 {
-	position: absolute;
-	z-index: 1;
-	top: 50%;
-	width: 100%;
-	margin: 0;
-	padding: 0 .5em;
-	color: #000;
-	font-size: 5rem;
-	line-height: 1.4;
-	font-family: "Dosis", sans-serif;
-	letter-spacing: .1em;
-	transform: translateY(-50%);
-}
-@media all and (max-width: 480px) {
-	header h1 {
-		font-size: 4rem;
-	}
-}
-
 
 .container {
   display: flex;
